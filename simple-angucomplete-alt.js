@@ -2,7 +2,7 @@ angular.module('app', ['angucomplete-alt']).directive('simpleAngucomplete', func
     return {
         restrict: 'E',
         require: 'ngModel',
-        templateUrl: 'bower_components/simple-autocomplete-alt/simple-angucomplete-alt.template.html',
+        templateUrl: 'bower_components/simple-angucomplete-alt/simple-angucomplete-alt.template.html',
         scope: {
             ngModel: '='
         },
