@@ -1,0 +1,17 @@
+{
+  "name": "rafwell/simple-angucomplete-alt",
+  "homepage": "https://github.com/rafwell/simple-angucomplete-alt",
+  "authors": [
+    "Rafael Souza <rafaotec@gmail.com>"
+  ],
+  "description": "Simplify angucomplete-alt",
+  "main": "",
+  "license": "GNU",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
