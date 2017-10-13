@@ -29,17 +29,17 @@ After install, include the reference on your html:
 //this is an example written in Laravel 5
 //if send a id, return the specific register
 if($request->id){
-    return $pessoas->withTrashed()->find($request->id);
+    return $people->withTrashed()->find($request->id);
 }
 //else, do your like and return the registers in an ['results'=>array()]
 return [
-    'results'=>$pessoas->where('nome', 'like', '%'.$request->search.'%')
+    'results'=>$people->where('name', 'like', '%'.$request->search.'%')
         ->orderByRaw('
-            case when nome like "'.addslashes($request->search).'%" then 0
-                 when nome like "%'.addslashes($request->search).'%" then 1
+            case when name like "'.addslashes($request->search).'%" then 0
+                 when name like "%'.addslashes($request->search).'%" then 1
             end
         ')     
-        ->orderByRaw('nome')
+        ->orderBy('name')
         ->limit(100)            
         ->get()
 ];
