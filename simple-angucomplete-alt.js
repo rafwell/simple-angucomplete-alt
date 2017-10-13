@@ -1,13 +1,18 @@
 angular.module('app', ['angucomplete-alt']).directive('simpleAngucomplete', function() {
     return {
-        restrict: 'E',
-        require: 'ngModel',
-        templateUrl: 'bower_components/simple-angucomplete-alt/simple-angucomplete-alt.template.html',
+        restrict: 'E',  
         scope: {
-            ngModel: '='
-        },
+          ngModel: '='
+        },      
+        templateUrl: 'bower_components/simple-angucomplete-alt/simple-angucomplete-alt.template.html',        
         replace: true,
-        controller: function($scope, $element, $http, $timeout) {              
+        require: 'ngModel',
+        controller: function($scope, $element, $http, $timeout, $compile) {
+            
+            $scope.$watch('ngModel', function(newValue){                    
+                $scope.getInitialValue();         
+            }, true);
+
             $scope.selectedObject = function(selected) {                          
                 if (selected) {
                     $scope.ngModel = selected.originalObject.id;
@@ -23,28 +28,34 @@ angular.module('app', ['angucomplete-alt']).directive('simpleAngucomplete', func
                 }, 300);                
             };
 
-            $scope.getInitialValue = function(){
+            $scope.getInitialValue = function(){                 
                 if($scope.ngModel){
                     $http({
-                        url: $element.find('.angucomplete-alt').attr('remote-url')+'&id='+$scope.ngModel
-                    }).then(function(response){                        
-                        $scope.initialValue = response.data[ $element.find('.angucomplete-alt').attr('title-field') ];
-                    });
-                }
-            };
+                        url: $scope.remoteUrl+'&id='+$scope.ngModel
+                    }).then(function(response){ 
+                        if(response.data[ $scope.titleField ])
+                            $scope.$broadcast('angucomplete-alt:changeInput', $scope.id, response.data[ $scope.titleField ]);
+                        else
+                            $scope.$broadcast('angucomplete-alt:clearInput', $scope.id);                    
 
-            $scope.getInitialValue();
+                    }).catch(function(err){
+                        console.log(err);                        
+                    });
+                }else{
+                    $scope.$broadcast('angucomplete-alt:clearInput', $scope.id);                    
+                }
+            };            
         },
-        link: function(scope, element, attrs) {
-            scope.placeholder = attrs.placeholder;
-            scope.remoteUrl = attrs.remoteUrl;            
-            scope.titleField = attrs.titleField;
-            scope.descriptionField = attrs.descriptionField;
-            scope.minlength = attrs.minlength ? attrs.minlength : 2;
-            scope.id = 'autocomplete_'+attrs.ngModel;                
-            angular.element('body').on('change', '#'+scope.id+'_value',  function(){
-                scope.clearIfNotSelected();
-            });      
+        link: function($scope, element, attrs) {
+            $scope.placeholder = attrs.placeholder;
+            $scope.remoteUrl = attrs.remoteUrl;            
+            $scope.titleField = attrs.titleField;
+            $scope.descriptionField = attrs.descriptionField;
+            $scope.minlength = attrs.minlength ? attrs.minlength : 2;
+            $scope.id = 'autocomplete_'+attrs.ngModel.substr('.', '_');                         
+            angular.element('body').on('change', '#'+$scope.id+'_value',  function(){                
+                $scope.clearIfNotSelected();
+            });            
         }
     };
 });

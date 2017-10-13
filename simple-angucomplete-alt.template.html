@@ -1,6 +1,7 @@
 <div class="input-group">    
     <angucomplete-alt 
       id="{{id}}"
+      ng-model="ngModel"
       placeholder="{{placeholder}}"
       maxlength="255"
       pause="300"
@@ -8,14 +9,14 @@
       initial-value="initialValue"
       remote-url="{{remoteUrl}}"                                      
       remote-url-data-field="results"
-  	  title-field="{{titleField}}"
-  	  description-field="{{descriptionField}}"	  
-  	  input-class="form-control form-control-small"
+      title-field="{{titleField}}"
+      description-field="{{descriptionField}}"    
+      input-class="form-control form-control-small"
       minlength="{{minlength}}"
       text-searching="Pesquisando..."
       text-no-results="Nenhum registro">
     </angucomplete-alt>
     <span class="input-group-addon">
-    	<i class="fa fa-search"></i>
+      <i class="fa fa-search"></i>
     </span>                                
 </div> 
