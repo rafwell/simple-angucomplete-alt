@@ -7,7 +7,9 @@ When you connect ngModel to the selectedObject of the angucomplete, this package
 ```bower install simple-angucomplete-alt```
 
 After install, include the reference on your html:
-```<script src="bower_components/simple-angucomplete-alt/simple-angucomplete-alt.js"></script>```
+```
+<script src="bower_components/simple-angucomplete-alt/simple-angucomplete-alt.js"></script>
+```
 
 ## use
 #Include on yout HTML
