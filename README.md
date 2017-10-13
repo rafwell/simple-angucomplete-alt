@@ -11,8 +11,8 @@ After install, include the reference on your html:
 <script src="bower_components/simple-angucomplete-alt/simple-angucomplete-alt.js"></script>
 ```
 
-## use
-#Include on yout HTML
+# Use
+## Include on yout HTML
 ```html
 <simple-angucomplete 
 	placeholder="Search clients"
@@ -24,7 +24,7 @@ After install, include the reference on your html:
 />
 ```
 
-# Backend example my-url-that-will-return-clients
+## Backend example my-url-that-will-return-clients
 ```php
 //this is an example written in Laravel 5
 //if send a id, return the specific register
