@@ -1,4 +1,4 @@
-angular.module('app', ['angucomplete-alt']).directive('simpleAngucomplete', function() {
+angular.module('app').directive('simpleAngucomplete', function() {
     return {
         restrict: 'E',  
         scope: {
