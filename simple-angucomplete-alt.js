@@ -27,7 +27,7 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
                     $scope.lastestNgModel = angular.copy($scope.ngModel);
                     if($scope.ngChange){
                         if($scope.timeoutChange)
-                            timeout.cancel($scope.timeoutChange);
+                            $timeout.cancel($scope.timeoutChange);
                             
                         $scope.timeoutChange = $timeout($scope.ngChange, 300);
                     }
