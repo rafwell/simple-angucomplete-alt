@@ -9,23 +9,27 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
         replace: true,        
         require: 'ngModel',        
         controller: function($scope, $element, $http, $timeout, $compile) {
+            $scope.pk = 'id';
             $scope.lastestNgModel = null;
 
             $scope.$watch('ngModel', function(newValue){
-                if(newValue!=$scope.lastestNgModel)                 
+                if(angular.toJson(newValue)!=angular.toJson($scope.lastestNgModel))
                     $scope.getInitialValue();         
             }, true);
 
             $scope.selectedObject = function(selected) {                          
-                if (selected) {
-                    $scope.ngModel = selected.originalObject.id;                    
+                if (selected) {                    
+                    if(!$scope.completeObject)
+                        $scope.ngModel = selected.originalObject[$scope.pk];
+                    else
+                        $scope.ngModel = selected.originalObject;
                 }else{
                     $scope.ngModel = null;                    
                 }
 
-                if($scope.lastestNgModel != $scope.ngModel){
-                    $scope.lastestNgModel = angular.copy($scope.ngModel);
-                    if($scope.ngChange){
+                if(angular.toJson($scope.lastestNgModel) != angular.toJson($scope.ngModel)){
+                    $scope.lastestNgModel = angular.copy($scope.ngModel);                    
+                    if($scope.ngChange){                        
                         if($scope.timeoutChange)
                             $timeout.cancel($scope.timeoutChange);
                             
@@ -34,11 +38,11 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
                 }
             };    
 
-            $scope.clearIfNotSelected = function(){
+            $scope.clearIfNotSelected = function(){                
                 if($scope.timeoutClear)
                     $timeout.cancel($scope.timeoutClear);
 
-                $scope.timeoutClear = $timeout(function(){
+                $scope.timeoutClear = $timeout(function(){                    
                     if(!$scope.ngModel)
                         $scope.$broadcast('angucomplete-alt:clearInput', $scope.id);                    
                 }, 300);                
@@ -47,13 +51,17 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
             $scope.getInitialValue = function(){                 
                 if($scope.ngModel){
                     $http({
-                        url: $scope.remoteUrl+'&id='+$scope.ngModel
+                        url: $scope.remoteUrl+'&id='+$scope.ngModel[$scope.pk]
                     }).then(function(response){ 
-                        if(response.data[ $scope.titleField ])
-                            $scope.$broadcast('angucomplete-alt:changeInput', $scope.id, response.data[ $scope.titleField ]);
+                        if(response.data[ $scope.titleField ]){
+                            if($scope.completeObject)
+                                $scope.$broadcast('angucomplete-alt:changeInput', $scope.id, response.data);
+                            else
+                                $scope.$broadcast('angucomplete-alt:changeInput', $scope.id, response.data[ $scope.titleField ]);
+                        }
                         else
-                            $scope.$broadcast('angucomplete-alt:clearInput', $scope.id);                    
-
+                            $scope.$broadcast('angucomplete-alt:clearInput', $scope.id);    
+                        
                     }).catch(function(err){
                         console.log(err);                        
                     });
@@ -72,7 +80,12 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
             $scope.titleField = attrs.titleField;
             $scope.descriptionField = attrs.descriptionField;                        
             $scope.minlength = attrs.minlength ? attrs.minlength : 2;
-            $scope.id = 'autocomplete_'+attrs.ngModel.substr('.', '_');                         
+            $scope.id = 'autocomplete_'+attrs.ngModel.substr('.', '_');     
+            $scope.completeObject = attrs.completeObject;
+
+            if(typeof attrs.pk != 'undefined')
+                $scope.pk = attrs.pk;                    
+
             angular.element('body').on('change', '#'+$scope.id+'_value',  function(){                
                 $scope.clearIfNotSelected();
             });
