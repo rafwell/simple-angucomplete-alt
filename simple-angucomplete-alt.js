@@ -48,10 +48,10 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
                 }, 300);                
             };
 
-            $scope.getInitialValue = function(){                 
+            $scope.getInitialValue = function(){                
                 if($scope.ngModel){
                     $http({
-                        url: $scope.remoteUrl+'&id='+$scope.ngModel[$scope.pk]
+                        url: $scope.remoteUrl+'&id='+($scope.completeObject ? $scope.ngModel[$scope.pk] : $scope.ngModel)
                     }).then(function(response){ 
                         if(response.data[ $scope.titleField ]){
                             if($scope.completeObject)
