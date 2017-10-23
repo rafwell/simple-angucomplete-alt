@@ -3,7 +3,7 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
         restrict: 'E',  
         scope: {
           ngModel: '=',
-          ngChange: '&'
+          ngChange: '&',
         },      
         templateUrl: 'bower_components/simple-angucomplete-alt/simple-angucomplete-alt.template.html',        
         replace: true,        
@@ -15,7 +15,7 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
             $scope.$watch('ngModel', function(newValue){
                 if(angular.toJson(newValue)!=angular.toJson($scope.lastestNgModel))
                     $scope.getInitialValue();         
-            }, true);
+            }, true);            
 
             $scope.selectedObject = function(selected) {                          
                 if (selected) {                    
@@ -37,6 +37,8 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
                     }
                 }
             };    
+
+            
 
             $scope.clearIfNotSelected = function(){                
                 if($scope.timeoutClear)
@@ -73,7 +75,7 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
         link: function($scope, element, attrs, ctrl) {  
             ctrl.$viewChangeListeners.push(function() {
               scope.$eval(attr.ngChange);
-            });          
+            }); 
 
             $scope.placeholder = attrs.placeholder;
             $scope.remoteUrl = attrs.remoteUrl;            
@@ -82,6 +84,10 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
             $scope.minlength = attrs.minlength ? attrs.minlength : 2;
             $scope.id = 'autocomplete_'+attrs.ngModel.substr('.', '_');     
             $scope.completeObject = attrs.completeObject;
+
+            if(attrs.remoteUrlRequestFormatter){                
+                $scope.remoteUrlRequestFormatter = element.scope()[attrs.remoteUrlRequestFormatter];
+            }
 
             if(typeof attrs.pk != 'undefined')
                 $scope.pk = attrs.pk;                    
