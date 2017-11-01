@@ -4,6 +4,7 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
         scope: {
           ngModel: '=',
           ngChange: '&',
+          disableInput: '='
         },      
         templateUrl: 'bower_components/simple-angucomplete-alt/simple-angucomplete-alt.template.html',        
         replace: true,        
