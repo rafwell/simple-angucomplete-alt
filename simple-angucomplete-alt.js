@@ -73,29 +73,33 @@ angular.module('app').directive('simpleAngucomplete', function($compile) {
                 }
             };    
         },
-        link: function($scope, element, attrs, ctrl) {  
-            ctrl.$viewChangeListeners.push(function() {
-              scope.$eval(attr.ngChange);
-            }); 
+        link:{  
+            pre: function($scope, element, attrs, ctrl){
 
-            $scope.placeholder = attrs.placeholder;
-            $scope.remoteUrl = attrs.remoteUrl;            
-            $scope.titleField = attrs.titleField;
-            $scope.descriptionField = attrs.descriptionField;                        
-            $scope.minlength = attrs.minlength ? attrs.minlength : 2;
-            $scope.id = 'autocomplete_'+attrs.ngModel.substr('.', '_');     
-            $scope.completeObject = attrs.completeObject;
+                ctrl.$viewChangeListeners.push(function() {
+                  scope.$eval(attr.ngChange);
+                }); 
 
-            if(attrs.remoteUrlRequestFormatter){                
-                $scope.remoteUrlRequestFormatter = element.scope()[attrs.remoteUrlRequestFormatter];
+                $scope.placeholder = attrs.placeholder;
+                $scope.remoteUrl = attrs.remoteUrl;            
+                $scope.titleField = attrs.titleField;
+                $scope.descriptionField = attrs.descriptionField;           
+
+                $scope.minlength = attrs.minlength ? attrs.minlength : 2;
+                $scope.id = 'autocomplete_'+attrs.ngModel.substr('.', '_');     
+                $scope.completeObject = attrs.completeObject;
+
+                if(attrs.remoteUrlRequestFormatter){                
+                    $scope.remoteUrlRequestFormatter = element.scope()[attrs.remoteUrlRequestFormatter];
+                }
+
+                if(typeof attrs.pk != 'undefined')
+                    $scope.pk = attrs.pk;                    
+
+                angular.element('body').on('change', '#'+$scope.id+'_value',  function(){                
+                    $scope.clearIfNotSelected();
+                });
             }
-
-            if(typeof attrs.pk != 'undefined')
-                $scope.pk = attrs.pk;                    
-
-            angular.element('body').on('change', '#'+$scope.id+'_value',  function(){                
-                $scope.clearIfNotSelected();
-            });
         }
     };
 });
